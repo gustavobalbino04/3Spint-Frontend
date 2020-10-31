@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contatos</title>
+</head>
+<body onload="Listar()">
+    <input type="text" id="nome" required/>
+    <input type="text" id="email" required/>
+    <input type="text" id="telefone" required/>
+
+    <button type="button" id='btnCadastrar'>Cadastrar</button>
+    <button type="button" id='btnRemover'>Remover</button>
+
+    <table>
+        <caption>Contatos</caption>
+        <thead>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Senha</th>
+        </thead>
+        <tbody id="tabela-lista-corpo"></tbody>
+    </table>   
+
+    <script>
+        let contatos = [{ 
+                            nome : 'Fernando',
+                            email : 'fernando.guerra@sp.senai.br',
+                            telefone : '11972084334'
+                        }]
+        
+        let btnCadastrar = document.querySelector('#btnCadastrar')
+        btnCadastrar.addEventListener('click', cadastrar);
+
+        let btnRemover= document.querySelector('#btnRemover')
+        btnRemover.addEventListener('click', remover);
+
+        let nome = document.querySelector('#nome');
+        let email = document.querySelector('#email');
+        let telefone = document.querySelector('#telefone');
+
+        function Listar(){
+
+            let corpo = document.querySelector('#tabela-lista-corpo');
+
+            corpo.innerHTML ="";
+            let linha, colunaNome, colunaEmail, colunaTelefone;
+
+            contatos.forEach(item =>{
+                linha = document.createElement('tr');
+
+                //Nome
+                colunaNome = document.createElement('td');
+                colunaNome.innerHTML = item.nome;
+                linha.appendChild(colunaNome);
+
+                //email
+                colunaEmail = document.createElement('td');
+                colunaEmail.innerHTML = item.email;
+                linha.appendChild(colunaEmail);
+
+                //Telefone
+                colunaTelefone = document.createElement('td');
+                colunaTelefone.innerHTML = item.telefone;
+                linha.appendChild(colunaTelefone);
+
+                corpo.appendChild(linha);
+            });
+            limpar();
+            
+
+        }
+
+        function cadastrar(event){
+            event.preventDefault();
+
+            let contato = {
+                nome : nome.value,
+                email : email.value,
+                telefone : telefone.value
+            }
+                contatos.push(contato);
+                alert('contato cadastrado');
+                Listar();
+        }
+
+        function remover(event){
+            event.preventDefault();
+
+            let index = contatos.findIndex(item => item.email == email.value);
+
+            if (index > -1) {
+                contatos.splice(index,1);
+                alert('contato removida');
+                Listar();
+                
+            } else {
+                alert('contado não encontrado');
+                
+            }
+
+        }
+
+        function limpar(){
+            nome.value = "";
+            email.value = "";
+            telefone.value = "";
+
+            nome.focus();
+        }
+        
+
+       
+    </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmes</title>
+    
+</head>
+<body>
+    
+    <form id="form">
+        <input type="text" id="nome" placeholder="Nome do filme" required>
+        <input type="text" id="categoria" placeholder="Categoria" required>
+        <input type="text" id="ano" placeholder="Ano de lançamento" required>
+
+        <button type="button"  id="btnCadastrar">Cadastrar</button>
+        <button type="button"  id="btnRemover">Remover</button>
+
+        <table>
+            <caption>Filmes</caption>
+            <thead>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Nome
+                </th>
+                <th>
+                    Categoria
+                </th>
+                <th>
+                    Ano Lançamento
+                </th>
+            </thead>
+            <tbody id="tabela-lista-corpo"></tbody>
+        </table>
+    </form>
+
+</body>
+<script>
+    //endpoint da api
+    let url ='https://5f9a074d9d94640016f70531.mockapi.io/api/filmes';
+    //armazena as categorias retornadas do api para que sejam global, visiveis em outras funções
+    let filmes = [];
+
+
+    function listar(){
+        //Cria uma instancia do objeto XmlHttpRequest para transferir os dados do cliente/servidor
+        let xhr = new XMLHttpRequest();
+        //define a função caso tenha sucesso
+        xhr.onload = listarSucesso;
+        //define a função caso tenha erro
+        xhr.onerror = listarErro;
+        //abre a conexão com a api passando o verbo e a url/endpoint
+        xhr.open('GET',url);
+        //envia para api
+        xhr.send()
+    }
+
+    function listarSucesso(){
+        console.log('Sucesso');
+         console.log(this.status);
+         console.log(JSON.parse(this.responseText));
+    }
+    //caso ocorra algum erro na chamada da api caiu nesta função,
+    function listarErro(err){
+        console.log(err);
+    }
+
+    let btnCadastrar = document.getElementById('btnCadastrar');
+    btnCadastrar.addEventListener('click',function(event){ 
+        event.preventDefault();
+
+
+        let nome = document.querySelector('#nome');
+        let categoria = document.querySelector('#categoria');
+        let lançamento = document.querySelector('#ano');
+
+        let params ={
+            name : nome.value,
+            categoria : categoria.value,
+            ano : lançamento.value
+        }
+        let xhrPost = new XMLHttpRequest();
+        xhrPost.onload = cadastroSucesso;
+        xhrPost.onerror = cadastroErro;
+        //envia os dados para api uasando o metodo POST
+        xhrPost.open('POST', url);
+        xhrPost.setRequestHeader('content-type','application/json');
+        //Cria o objeto com o nome da categoria
+
+        //Para enviar no post eu converto
+        xhrPost.send(JSON.stringify(params));
+
+    });
+     
+     function cadastroSucesso(){
+         console.log('Sucesso');
+         console.log(this.status);
+         console.log(JSON.parse(this.responseText));
+
+         listar();
+
+         nome.value = "";
+         categoria.value = "";
+         ano.value = "";
+         nome.focus();
+     }
+     function cadastroErro(err){
+         console.log('Erro' + err);
+     }
+
+     let btnRemover = document.getElementById('btnRemover');
+     btnRemover.addEventListener('click',function(event){
+
+        event.preventDefault();
+        let idfilmes = document.querySelector('#nome'); 
+        let xhrDelete = new XMLHttpRequest();
+        xhrDelete.onload = removeSucesso;
+        xhrDelete.onerror = removeErro;
+        xhrDelete.open('DELETE', url + '/' + idfilmes.value);
+        xhrDelete.send();
+     });
+     function removeSucesso(){
+
+         console.log(this.status);
+         console.log(JSON.parse(this.responseText));
+         listar();
+         nome.value = "";
+     }
+     function removeErro(err){
+        console.log('Erro' + err);
+     }
+</script>
+</html>
