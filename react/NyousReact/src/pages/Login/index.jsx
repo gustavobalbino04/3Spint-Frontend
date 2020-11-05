@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { useHistory } from 'react-router-dom';
 import jwt_decore from "jwt-decode";
+import {url} from '../../utils/constants';
 import Menu from '../../components/Menu';
 import Rodape from '../../components/Rodape'
 import {Form, Button, Container} from 'react-bootstrap';
@@ -19,7 +20,7 @@ const Login = () => {
         console.log(`${email} - ${senha}`)
 
         //conectando com o banco atraves do locahoost 
-        fetch('',{
+        fetch(url + '',{
             method : "POST",
             body : JSON.stringify({
                 email : email,

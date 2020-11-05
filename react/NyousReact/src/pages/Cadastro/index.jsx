@@ -37,7 +37,7 @@ const Cadastrar = () => {
                         Enviar
                     </Button>
                     <br/><br/>
-                    <a href='/cadastrar' style={{ marginTop :'30px'}}>Não tenho conta!</a>
+                    <a href='/login' style={{ marginTop :'30px'}}>Não tenho conta!</a>
                 </Form>
             </Container>
             <Rodape />

@@ -1,6 +1,6 @@
 import  React from 'react';
-import Rodape from '../../components/Rodape';
-import Menu from '../../components/Menu'
+import Rodape from '../../../components/Rodape';
+import Menu from '../../../components/Menu'
 
 const Dashboard =()=>{
     return(

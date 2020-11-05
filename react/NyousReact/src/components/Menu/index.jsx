@@ -1,49 +1,77 @@
 import React from 'react';
-import {Navbar, Nav} from 'react-bootstrap';
+import { useHistory} from "react-router-dom";
+import {Navbar, Nav, NavDropdown} from 'react-bootstrap';
+import jwt_decode from 'jwt-decode';
 
 function Menu (){
+  const history = useHistory();
+
+  const sair = (event) => {
+    event.preventDefault();
+
+    localStorage.removeItem('token-nyous');
+
+    history.pushState('/');
+  }
 
   const renderMenu = () => {
     const token = localStorage.getItem('token-nyous');
     if(token == null){
       return(
-        <div>
+       
 
-        <li className="nav-item">
-              <a className="nav-link" href="/Cadastro">Cadastro</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/Login">Login</a>
-              
-            </li>
-        </div>
+                <Nav>
+                    <Nav.Link href="/login">Login</Nav.Link>
+                    <Nav.Link href="/cadastrar">Cadastrar</Nav.Link>
+                </Nav>
 
-      )else if()
-    }
-    console.log(token);
+      )
+      }else if(jwt_decode(token).role === "Admin"){
+        return( 
+          
+          
+          <Nav>
+          <Nav.Link href="/admin/dashboard">Dashboard</Nav.Link>
+          <Nav.Link href="/admin/categorias">Categorias</Nav.Link>
+          <Nav.Link href="/admin/eventos">Eventos</Nav.Link>
+          
+            <NavDropdown title={jwt_decode(token).family_name} id="basic-nav-dropdown">
+                <NavDropdown.Item href="/perfil">Perfil</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item onClick={event => sair(event)} >Sair</NavDropdown.Item>
+            </NavDropdown>
+        
+          </Nav>
+        )
+
+      }else{
+        return( 
+          
+          <Nav>
+          <Nav.Link href="/eventos">Eventos</Nav.Link>
+            <NavDropdown title={jwt_decode(token).family_name} id="basic-nav-dropdown">
+                <NavDropdown.Item href="/perfil">Perfil</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item onClick={event => sair(event)}>Sair</NavDropdown.Item>
+            </NavDropdown>
+           
+          </Nav> 
+        )
+      }
+        
+  
   }
     return(
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand" href="#">Nyous</a>
-        <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item active">
-              <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/Cadastro">Cadastro</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/Login">Login</a>
-              
-            </li>
-          </ul>
-          {renderMenu()}
-        </div>
-      </nav>
+      <Navbar bg="light" expand="lg">
+      <Navbar.Brand href="/"><img src alt='NYOUS' style={{ width : '64px'}} /></Navbar.Brand>
+      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mr-auto">
+              <Nav.Link href="/">Home</Nav.Link>
+          </Nav>
+          { renderMenu() }
+      </Navbar.Collapse>
+      </Navbar>
     )
 }
 export default Menu;
